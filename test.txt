@@ -1,0 +1,28 @@
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+local LocalPlayer = Players.LocalPlayer
+local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+local HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
+local Humanoid = Character:WaitForChild("Humanoid")
+
+local glideThreshold = 1
+local lastInputTime = tick()
+
+print("Anti-Glide Script By Zyn")
+
+RunService.RenderStepped:Connect(function()
+    local moveDir = Humanoid.MoveDirection
+    local velocity = HumanoidRootPart.Velocity
+    local horizontalSpeed = Vector3.new(velocity.X, 0, velocity.Z).Magnitude
+
+    if moveDir.Magnitude > 0.1 then
+        lastInputTime = tick()
+        return
+    end
+
+    if tick() - lastInputTime > 0.3 and horizontalSpeed > glideThreshold then
+        HumanoidRootPart.Velocity = Vector3.new(0, velocity.Y, 0)
+        print("Glide Stop neow!")
+    end
+end)
